@@ -6,7 +6,7 @@
 
 Okay, let’s set up your computer so you’re ready to start interacting with Solana!
 
-(And by the way, // Installation Commands are in drag down)
+(*And by the way, // Installation Commands are in drag down*)
 
 Let’s do it.
 
@@ -16,7 +16,7 @@ Installation command
 
 **Linux and MacOS can just use this Command:**
 
-curl https://sh.rustup.rs -sSf | sh
+`curl https://sh.rustup.rs -sSf | sh`
 
 **For Windows users:**
 
@@ -55,13 +55,13 @@ Either run the “export” command as shown or restart the terminal Run “\`so
 
 Check if Solana keygen is running correctly using:
 
-- `solana-keygen --version`
+`solana-keygen --version`
 
 ![](https://lh4.googleusercontent.com/E1SswbNOiLB5pjZRuMs1rNvj2UFsL-XhhpqXIPoE7ihFC1FSF9Gcaw83kNqrxO7eCoJw-axcvMgctzUPVjl7JNVA5wSlaqy0aB2NsfbQ34hTseWwhzqWKaWthYAb-QqBRnx4WY5jwTQfucwHbItQrN8)
 
 Next, make your first wallet using:
 
-- `solana-keygen new`
+`solana-keygen new`
 
 This will create your wallet and give you a seed phrase etc. The private keys get stored locally on your machine.
 
@@ -69,17 +69,20 @@ You can add a passphrase which would be an extra layer of security to the seed p
 
 ![](https://lh3.googleusercontent.com/laO_hL9wLqzpV_BQSVSX7Leo6ZE1e84pCE0mTlyMeRTm7ZOaQ-BePjkRTuT5mBo04Mfo0ASYHLTCanbHC1u133n0YCoWG8uEeLcPK1BOFb2s0qCaABHf0UF1Wp5J9hTglhnj3B4ESXj7whXdHHg1Wlk)
 
-You can access the location of the keypair using:
+You can access the location of the **keypair** using:
 
-- `solana config get`
+`solana config get`
 
 ![](https://lh4.googleusercontent.com/yFgjnQbzae-jHVLNXRWRAgHIWfnbC4jCZU-2cF0CJUj26kbyEh3xL2MAdzP3pXdtfmmjbZDULqsfIEdb-438aPA-kPLhLBcb8EPmODGAIX75aVph1an6iL7eM2kY-moRikS6K_PR-N8vb2jNgs0NZKA)
 
-The keypair path is displayed here, it also showcases which network you are currently pointing to. Network options are mainnet-beta, testnet and devnet.
+The keypair path is displayed here, it also showcases which network you are currently pointing to. Network options are: 
+- mainnet-beta,
+- testnet
+- and devnet.
 
-You can change your network very easily using the command
+You can **change** your **network** very easily using the command
 
-- `solana config set --url mainnet-beta`
+`solana config set --url mainnet-beta`
 
 Instead of mainnet-beta, you can replace it with devnet and testnet. This will use the general RPC URL which is public.
 
@@ -87,7 +90,7 @@ Instead of mainnet-beta, you can replace it with devnet and testnet. This will u
 
 You can also use a custom RPC URL of your choice using the same command
 
-- `solana config set --url`
+`solana config set --url`
 
 _Fun Fact: You can create a wallet starting or ending with particular letters. Lots of protocols do it for adding that fancy rizz._
 
@@ -101,7 +104,7 @@ You can play a lot with creating a custom wallet, use `solana-keygen grind --hel
 
 Command to get funds on Devnet:
 
-- `solana airdrop`
+`solana airdrop`
 
 ![](https://lh4.googleusercontent.com/VXxVU2OpZ9k-QeCDG2BO-Me1RsEycYcaYzInZbcB81e8FtwRcngtLPbKnu8BnfHfADMOYMaji6jfbpwy1TlpUdDv8nhOh7MGSjyHlOolkhKrTyzSkBkK7eFqOea1n9AKfHF34t6tuCXqRwJmIPBNlZY)
 
@@ -135,7 +138,7 @@ Anchor is a massive framework used to write safe, secure, and high-level program
 
 Install AVM ( recommended method )
 
-- `cargo install --git https://github.com/coral-xyz/anchor avm --locked --force`
+`cargo install --git https://github.com/coral-xyz/anchor avm --locked --force`
 
 Use AVM to manage Anchor versions
 
