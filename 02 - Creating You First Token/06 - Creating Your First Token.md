@@ -14,7 +14,7 @@ Feel like you know why Solana is great for builders? If not, click [here](https:
 
 First time setting up your local environment? Click [here](https://calyptus.co/lessons/intro-to-rust-programming/)
 
-First time programming with Rust? Click [here](https://calyptus.co/lessons/setting-up-your-local-environment/(opens in a new tab))
+First time programming with Rust? Click [here](https://calyptus.co/lessons/setting-up-your-local-environment/) (opens in a new tab)
 
 **Getting Started**
 
@@ -96,11 +96,15 @@ If you do not have any funds in your wallet on devnet, you can just airdrop them
 
 If you do not enter the address it would airdrop it to the default keypair we made while setting up our local dev environment.
 
-> solana config set --url devnet
-> solana airdrop 1 2mcDUMsXbfzeiyr8cNd4XrTp2uwKySC6ujGmCVfBfQ3j --url devnet
+```bash
+solana config set --url devnet
+solana airdrop 1 2mcDUMsXbfzeiyr8cNd4XrTp2uwKySC6ujGmCVfBfQ3j --url devnet
+```
 
-> solana config set --url testnet
-> solana airdrop 1 2mcDUMsXbfzeiyr8cNd4XrTp2uwKySC6ujGmCVfBfQ3j --url testnet
+```bash
+solana config set --url testnet
+solana airdrop 1 2mcDUMsXbfzeiyr8cNd4XrTp2uwKySC6ujGmCVfBfQ3j --url testnet
+```
 
 ```
 Requesting airdrop of 1 SOL
@@ -185,7 +189,7 @@ So far, you’ve got to grips with this crucial concept: a user needs a token ac
 
 To solve this issue, a standard way of deriving token accounts exists using the _Associated Token Program_. This program provides us with the standard way of deriving a token account for a user and such an account is known as an Associated Token Account or ATA.
 
-ATA is in fact a program-derived-address (PDA) account. If you complete our: **Create Your First dApp** tutorial, we cover PDAs and all Anchor Theory. The seeds of an ATA’s PDA comprise the user’s address, the mint account’s address and the Associated Token Program’s address. Since we have all three variables available to us, we can easily derive the ATA address for any user and check if such an ATA exists or not. 
+ATA is in fact a **program-derived-address (PDA)** account. If you complete our: **Create Your First dApp** tutorial, we cover PDAs and all Anchor Theory. The seeds of an ATA’s PDA comprise the user’s address, the mint account’s address and the Associated Token Program’s address. Since we have all three variables available to us, we can easily derive the ATA address for any user and check if such an ATA exists or not. 
 
 The transfer command we looked at in the last section does exactly this under the hood. First of all, it derives PDA using the given token address and recipient address. If such PDA exists on-chain then the recipient’s ATA exists so it sends the token to such ATA. If not, then it first creates an ATA for the recipient and then sends tokens to it.
 

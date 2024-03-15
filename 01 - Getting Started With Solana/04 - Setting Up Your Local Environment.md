@@ -37,6 +37,14 @@ You can check once it’s done by using the following commands:
 
 ![](https://lh6.googleusercontent.com/V9iF3oomkFUhKp1h8Bt8_Zk7GXRimcKF983gvE5EfcbYSFXvTIMIJcGq1gYxN_auy6hDRrs0BSrG7fxcwSVF7htPD1wv1duK0q8GV5aaE61Qs_GU4sv9To6REPQHV9pS-VsjQbi9aX4WZ9aIiBefcSU)
 
+```bash
+❯ rustc --version
+rustc 1.76.0 (07dca489a 2024-02-04)
+
+❯ cargo --version
+cargo 1.76.0 (c84b36747 2024-01-18)
+```
+
 Official Rust Docs: [https://doc.rust-lang.org/cargo/getting-started/installation.html](https://doc.rust-lang.org/cargo/getting-started/installation.html)
 
 **Solana CLI**
@@ -49,15 +57,25 @@ You can replace the term “stable” with a particular version like v1.15.2 or 
 
 ![](https://lh4.googleusercontent.com/v_JkXaKy3BHTPCjHNA37MKaYQWl1jSCoPLcjkurSA7GD3w3vJ_t_YbO8RNlEVsW9Y28Uz7tMsAkAr2gySgmBrIHwHqyu9aXAl1adtkP6ejmdaUH8GraGvXRBeMJFe6U7gfGXYmgRtLo2redBaBYAQB4)
 
-Either run the “export” command as shown or restart the terminal Run “\`solana –version“\` to check if everything is correctly installed
+Either run the “export” command as shown or restart the terminal Run “`solana –version`“ to check if everything is correctly installed
 
 ![](https://lh5.googleusercontent.com/K_dJm1gMCicrfesuCkQ-92zAHRq_q5ypBNw7BPECdHeWKvr3SFu9_WRAt0I7FdUdoAihDL_-gHX0tvO6WNnhHD3vIJpVEcFvHfi9QaE5Fs9oGLf4Jn2TAjRKAkWlx6_AURHfxySic5xpjvpu5O9_8qc)
+
+```bash
+❯ solana --version
+solana-cli 1.17.4 (src:2e5a20f7; feat:2295605592, client:SolanaLabs)
+```
 
 Check if Solana keygen is running correctly using:
 
 `solana-keygen --version`
 
 ![](https://lh4.googleusercontent.com/E1SswbNOiLB5pjZRuMs1rNvj2UFsL-XhhpqXIPoE7ihFC1FSF9Gcaw83kNqrxO7eCoJw-axcvMgctzUPVjl7JNVA5wSlaqy0aB2NsfbQ34hTseWwhzqWKaWthYAb-QqBRnx4WY5jwTQfucwHbItQrN8)
+
+```bash
+❯ solana-keygen --version
+solana-keygen 1.17.4 (src:2e5a20f7; feat:2295605592, client:SolanaLabs)
+```
 
 Next, make your first wallet using:
 
@@ -75,6 +93,16 @@ You can access the location of the **keypair** using:
 
 ![](https://lh4.googleusercontent.com/yFgjnQbzae-jHVLNXRWRAgHIWfnbC4jCZU-2cF0CJUj26kbyEh3xL2MAdzP3pXdtfmmjbZDULqsfIEdb-438aPA-kPLhLBcb8EPmODGAIX75aVph1an6iL7eM2kY-moRikS6K_PR-N8vb2jNgs0NZKA)
 
+
+```bash
+❯ solana config get
+Config File: /home/franck/.config/solana/cli/config.yml
+RPC URL: http://localhost:8899 
+WebSocket URL: ws://localhost:8900/ (computed)
+Keypair Path: /home/franck/.config/solana/id.json 
+Commitment: confirmed 
+```
+
 The keypair path is displayed here, it also showcases which network you are currently pointing to. Network options are: 
 - mainnet-beta,
 - testnet
@@ -87,6 +115,15 @@ You can **change** your **network** very easily using the command
 Instead of mainnet-beta, you can replace it with devnet and testnet. This will use the general RPC URL which is public.
 
 ![](https://lh6.googleusercontent.com/cBcWA5FTrWYdckdUTqMUUfgSxcWuorCQrmntw3G1GZAxDPglw_IrePKOJuv4lCKQ-aVvVMh-kEGtXLSVtp170UBCxp8eN1v0CjQriSidzvpv740984jGuG4suqApPzBaHP1VmqNx2LkJnOwI7juqHgA)
+
+```bash
+❯ solana config set --url mainnet-beta
+Config File: /home/franck/.config/solana/cli/config.yml
+RPC URL: https://api.mainnet-beta.solana.com 
+WebSocket URL: wss://api.mainnet-beta.solana.com/ (computed)
+Keypair Path: /home/franck/.config/solana/id.json 
+Commitment: confirmed 
+```
 
 You can also use a custom RPC URL of your choice using the same command
 
@@ -107,6 +144,16 @@ Command to get funds on Devnet:
 `solana airdrop`
 
 ![](https://lh4.googleusercontent.com/VXxVU2OpZ9k-QeCDG2BO-Me1RsEycYcaYzInZbcB81e8FtwRcngtLPbKnu8BnfHfADMOYMaji6jfbpwy1TlpUdDv8nhOh7MGSjyHlOolkhKrTyzSkBkK7eFqOea1n9AKfHF34t6tuCXqRwJmIPBNlZY)
+
+```bash
+❯ solana airdrop 1
+Requesting airdrop of 1 SOL
+
+Signature: 5snyM78hdy4BTf4KGEKtogVATC1mhhjPqmhFFj21KEfoP3LJYwufcBYaofF9Y7b926fkaT3pKF3aM9pxuGpxLfYe
+
+1 SOL
+```
+
 
 Funds go to your default wallet if no address is provided.
 
