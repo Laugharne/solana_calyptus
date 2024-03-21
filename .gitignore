@@ -1,3 +1,5 @@
 .data
 playground/test-ledger/
 notes.md
+
+node_modules/*

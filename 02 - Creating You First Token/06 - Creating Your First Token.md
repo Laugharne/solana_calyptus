@@ -6,15 +6,11 @@
 
 ### **Project Checklist!** 
 
-Are you familiar with blockchain technology? If not, click [here](https://calyptus.co/lessons/blockchain-101/)  
-
-Are you familiar with smart contracts and how they work? If not, click [here](https://calyptus.co/lessons/smart-contracts-101-3/)
-
-Feel like you know why Solana is great for builders? If not, click [here](https://calyptus.co/lessons/intro-to-solana/(opens in a new tab))
-
-First time setting up your local environment? Click [here](https://calyptus.co/lessons/intro-to-rust-programming/)
-
-First time programming with Rust? Click [here](https://calyptus.co/lessons/setting-up-your-local-environment/) (opens in a new tab)
+- [X] Are you familiar with blockchain technology? If not, click [**here**](https://calyptus.co/lessons/blockchain-101/)  
+- [X] Are you familiar with smart contracts and how they work? If not, click [**here**](https://calyptus.co/lessons/smart-contracts-101-3/)
+- [X] Feel like you know why Solana is great for builders? If not, click [**here**](https://calyptus.co/lessons/intro-to-solana/) (*opens in a new tab*)
+- [X] First time setting up your local environment? Click [**here**](https://calyptus.co/lessons/intro-to-rust-programming/)
+- [X] First time programming with Rust? Click [**here**](https://calyptus.co/lessons/setting-up-your-local-environment/) (*opens in a new tab*)
 
 **Getting Started**
 
@@ -31,9 +27,10 @@ In this project, we are going to be building our own token on Solana. If you’r
 
 #### **Recap: how tokens work on Solana**
 
-As discussed in the Solana 101 module ([here](https://calyptus.co/lessons/intro-to-solana/)), Solana has a unique architecture where the logic and state are stored in separate accounts. Since the logic is the same for every token, a single Program Account can be used for all the tokens on Solana, unlike Ethereum where every token has to create and deploy a new copy of ERC-20 contract. 
+As discussed in the **Solana 101 module** ([**here**](https://calyptus.co/lessons/intro-to-solana/)), Solana has a unique architecture where the logic and state are stored in separate accounts. Since the logic is the same for every token, a single Program Account can be used for all the tokens on Solana, unlike Ethereum where every token has to create and deploy a new copy of ERC-20 contract. 
 
-Therefore, the current token standard on Solana is to use the same Program known as SPL Token Program to create tokens and a different program from Metaplex known as Token Metadata Program to create data accounts for the token to store the token details and metadata respectively. The token Account stores data such as the balance and each one is owned and managed by the **SPL Token Program.**
+- Therefore, the current token standard on Solana is to use the same Program known as **SPL Token Program** to create tokens
+- And a different program from Metaplex known as **Token Metadata Program** to create data accounts for the token to store the token details and metadata respectively. The token Account stores data such as the balance and each one is owned and managed by the **SPL Token Program.**
 
 ![](https://lh5.googleusercontent.com/5m_k4S3jP3ydpkFKmoIDDj_AXmeHiq1iQiQ5oMJppxCta2X8qKjRYi0BojEgIw8CfLb-U50PduStI7rrgaXKTpN_puK42d0UEdMmBwWxNUR4TI-uZKKXkz5SzWNAbe_FylgXAyneUYV2IfpAlsRiIeo)
 
@@ -63,7 +60,7 @@ We shall split this tutorial into _two parts_: one for creating a token using th
 
 #### **Installation**
 
-If you have been following the Local Development Environment setup, you’ll already have installed Rust, Cargo and Solana CLI, if not, it’s a bunch of simple commands, here is the [link](https://calyptus.co/lessons/setting-up-your-local-environment/).
+If you have been following the Local Development Environment setup, you’ll already have installed Rust, Cargo and Solana CLI, if not, it’s a bunch of simple commands, here is the [**link**](https://calyptus.co/lessons/setting-up-your-local-environment/).
 
 Installing spl-token-cli is easy, just write the following command in the terminal.
 
@@ -74,6 +71,11 @@ Once installed, you can check if everything is correctly done by running
 - `spl-token --version`
 
 ![](https://lh3.googleusercontent.com/9k4gUdXor0Iwa0vOXoOdlF60QwhEeMsGvN5_EBjjO-7b4GCyXBbq9mOdQNJIXQEycn41Vkex-Qic7JHbkLXiTjSJYhsaIVmKN_W-io98H1RdP2sqg2-Ux8pNLg-_XmJemyWfaBuw8RAKa0KSzw12qyk)
+
+```bash
+❯ spl-token --version
+spl-token-cli 3.2.0
+```
 
 **Setup**
 
@@ -113,7 +115,7 @@ Signature: 5GrdBZuLU3FUqgxxpGo5pYCAc641uKSoj89meH5MsVe88B8RZkbhCQ2bpeqWzHnQJ6v8k
 
 1 SOL
 ```
-  
+
 - [Solana Devnet | Explorer by Triangle](https://explorer.triangleplatform.com/solana/devnet)
 - [Explorer | Solana](https://explorer.solana.com/?cluster=testnet)
 
@@ -127,15 +129,23 @@ Now that we are set up with a wallet and some funds, let’s create our token. R
 
 It created a mint account for us with the following address, you would notice that by default it gave decimals 9. This is how many decimals your token can be broken into. Different tokens have different decimals depending upon the use case. You can set a custom one as well by adding a simple flag.
 
-- `spl-token create-token --decimals`
+- `spl-token create-token --decimals XX`
 
 ![](https://lh3.googleusercontent.com/DPfddlt1h5jeOofNjLw_sNEK076l5C5jvEZTsHTemMV5q27nS_ZqgQwwaAgpTv4C5mZr_oC6Efia8J_Efgp_XWn1X1T2l2Y3RsKQJRdYI-KGRHdA1ysfR7F8P7c3iY9K_3pugNeXC9uNvVmz-A46hEQ)
 
-You can always run –help flag with almost all the commands to know more about the extra options you get to play around with.
+You can always run `–help` or `-–help` flag with almost all the commands to know more about the extra options you get to play around with.
 
 Let’s move forward, now to some interesting parts. As discussed previously, each wallet has separate token accounts under it to handle balances for each and every different SPL token. See below!
 
 ![](https://lh3.googleusercontent.com/STsg-vCa-hmIiXuV_UZg71fou6trz_f7rZ0_pndBBDbT8lqbGwC-PNcLSBw7SKLogzO42_YCQLdc02j_hbq5cqQJBtMo7OcBs2_FAPApXwAXusDMfoDR-P-s7JUoTVXVyytC-uqVe55XwYLtDANYmuk)
+
+```mermaid
+graph TD
+    A --> USDC[USDC Token Account]
+    A --> BONK[Bonk Token Account]
+    A[Your Wallet] --> ATA[Another Token Account]
+    A --> YATA[Yet Another Token Account]
+```
 
 Each of the token accounts manage the balance of different tokens. This way the Accounts Model of Solana helps in processing parallel transactions.
 
@@ -143,25 +153,45 @@ So now that we have created a mint account, we would also need to create a token
 
 - `spl-token create-account <token-address>`
 
+With **`<token-address>`** give by `spl-token create-token --decimals XX` see above...
+
 ![](https://lh6.googleusercontent.com/JLbwbwx8OP8SRxelfQcr5TSCWOG6MO9AOdHhLqrLJ5aE1zaFOdpsazDMvkfEjECCv664Hoq1svgVTTgygYSKuw9_XHqIFdq0pxpYQs4sg_MI5mSwYXlln_xwtrIW5NlKP1m0XgLndt2sKH9vR6OdBKg)
 
-Now we have a token account, let’s mint some tokens! Since, our wallet has initialized the mint account, we own the mint authority of the token. So, we can go on and run the following command which will create new tokens to our token account.
+Now we have a **token account**, let’s mint some tokens! Since, our wallet has initialized the mint account, we own the mint authority of the token. So, we can go on and run the following command which will create new tokens to our token account.
 
-- `spl-token mint <token-address<amount-to-mint>`
+- `spl-token mint <token-address> <amount-to-mint>`
 
 ![](https://lh6.googleusercontent.com/s-ksNRn5AXXVwExpWYRjYpoyODaZRbwqDRLtOY88LyK6MNet_M7FzR3NKhWFMVzBLeCmXzLLki9wYZhUH9E31wyPhdqFOgdUCZ47w0sN8NpogCqSobV8cXhBKbrQMx7mbEYZpHY_-QZEOGDgAGnIj14)
 
 If we want to mint the new tokens to someone else’s account, we can provide the token account of the user in the above command as following:
 
-- `spl-token mint <token-address<amount-to-mint<user-token-account>`
+- `spl-token mint <token-address> <amount-to-mint> <user-token-account>`
+
+> La commande `spl-token mint` est utilisée pour créer de nouveaux jetons et les attribuer à un compte utilisateur spécifique. Voici ce que chaque paramètre de la commande représente :
+
+> 1. **token-address**: C'est l'**adresse du jeton (token)** que vous souhaitez créer. Cela correspond à l'adresse du "Token Mint" sur Solana, qui est le compte responsable de l'émission de nouveaux jetons.
+> 2. **amount-to-mint**: C'est la quantité de nouveaux jetons que vous souhaitez créer et attribuer. Vous devez spécifier cette quantité dans le plus petit unité possible du jeton (par exemple, pour un jeton avec une précision de 9 décimales, vous devrez spécifier la quantité en nanots).
+> 3. **user-token-account** : C'est l'adresse du compte utilisateur auquel vous souhaitez attribuer les nouveaux jetons. Ce compte doit déjà avoir été créé et associé au même type de jeton (c'est-à-dire qu'il doit être lié au même "Token Mint").
+
+> En utilisant cette commande, vous pouvez créer de nouveaux jetons et les distribuer à des comptes utilisateurs spécifiques sur la blockchain Solana.
 
 There are a bunch of more commands you can play with:
 
-- `spl-token supply`
+- `spl-token supply <token-address>`
+
+With **`<token-address>`** give by `spl-token create-token --decimals XX` see above...
 
 ![](https://lh6.googleusercontent.com/I5Eaj2PRcUbHHxx2KgNJ3EtrX0nYbIt3oCH7qjlj7O1yGWBPGVM9vfzX2PHfwnSOSWCB4q2tE9nRii5UVRqfpc5bgugIhNTETF7FXC1I52_sVZkoiWA-FrrhMgAfjHBDpEIPv7Jb6oY2qReAKGn4Igw)
 
 The above command gives us the supply of the token. In the overview, we discussed that the supply being one of the basic information of the token is saved in the mint account. So, we have to provide the mint account in the above command to get the current supply of our token.
+
+> La commande `spl-token supply <token-address>` est utilisée pour interroger le nombre total de jetons en circulation d'un token spécifique. Voici une explication détaillée de cette commande :
+
+> 1. **spl-token**: C'est un outil en ligne de commande qui fait partie de la bibliothèque **SPL (Solana Program Library)** utilisée pour interagir avec les tokens sur la blockchain Solana.
+> 2. **supply**: C'est l'option de la commande qui indique à l'outil `spl-token` d'interroger le nombre total de jetons en circulation.
+> 3. **<token-address>**: C'est l'**adresse du token** pour lequel vous souhaitez connaître l'approvisionnement total. Chaque token sur la blockchain Solana a une adresse unique qui l'identifie de manière unique sur le réseau.
+
+> En utilisant cette commande avec l'adresse du token spécifique, vous pouvez **récupérer le nombre total de jetons en circulation de ce token** particulier sur la blockchain Solana. Cela peut être utile pour surveiller l'approvisionnement en jetons d'un projet ou pour effectuer des vérifications de conformité.
 
 You can view all the spl-token accounts under your wallet using the command
 
@@ -169,23 +199,38 @@ You can view all the spl-token accounts under your wallet using the command
 
 ![](https://lh6.googleusercontent.com/WkmQ-9ZEPkH7LjsXh3HKGaG7drwA6II8BHEv4G3mOex-vzyioicyZt8tIFyDFGans65mv6FhhVEAIF6RizF2ETjwFEGsepeqdjMQXaFOyywCs1E7hchPH3UYawCK0TWtQ3c-DfoAvzitgbAElODEIZo)
 
+> Cette commande permet généralement de **récupérer des informations sur les comptes** de jetons SPL présents sur la blockchain Solana. Plus précisément, elle affiche une liste des comptes de jetons SPL associés à une adresse de portefeuille spécifique, en fournissant des détails tels que le type de jeton, le solde du compte, l'identifiant du compte et d'autres informations pertinentes.
+
+> En résumé, la commande `spl-token accounts` permet aux utilisateurs de consulter les informations sur les comptes de jetons SPL sur la blockchain Solana, ce qui peut être utile pour suivre les soldes des jetons, vérifier les transactions et effectuer d'autres opérations liées aux jetons sur Solana.
+
 Okay enough chit-chat, let’s send out our newly minted token to our friends…
 
-- `spl-token transfer <token-address<amount<recipient-address--allow-unfunded-recipient --fund-recipient`
+- `spl-token transfer <token-address> <amount> <recipient-address> --allow-unfunded-recipient --fund-recipient`
 
 ![](https://lh4.googleusercontent.com/iuChoYavss_-NG43o1U5yUivF5UJLRBhO3YZWbi3251dWNqz4ApznfT118fI09SlDoPmLuQWuFSUer1wyk7viORuoZ3mZ9qJHl6xWry_KovfcZJxJJ45KD4QJh71DHVszel58y2ViOpk6WlNnYxRx6A)
 
+> La commande `spl-token transfer` est utilisée pour **transférer des jetons d'un compte à un autre**. Voici ce que fait chaque paramètre de la commande :
+
+> 1. `<token-address>` : C'est l'**adresse du jeton** que vous souhaitez transférer. Cela spécifie le jeton que vous transférez.
+> 2. `<amount>` : C'est la quantité de jetons que vous souhaitez transférer.
+> 3. `<recipient-address>` : C'est l'**adresse du destinataire** où les jetons seront transférés. Cela spécifie le **compte qui recevra les jetons**.
+> 4. `--allow-unfunded-recipient` : C'est un drapeau facultatif. Lorsqu'il est utilisé, il **permet de transférer des jetons à un destinataire qui n'a pas encore reçu de jetons** sur la blockchain Solana. Cela peut être utile si le destinataire n'a pas encore créé de compte pour le jeton spécifié.
+> 5. `--fund-recipient` : C'est également un drapeau facultatif. Lorsqu'il est utilisé, il indique au programme d'**envoyer** également une **petite quantité de SOL** (la monnaie native de Solana) au destinataire pour couvrir les **frais de transaction**. Cela est nécessaire **si le destinataire n'a pas encore de SOL** sur son compte pour payer les frais de transaction.
+
+> En résumé, la commande `spl-token transfer` est utilisée pour transférer une quantité spécifique de jetons d'un compte à un autre sur la blockchain Solana. Les paramètres spécifient les détails du transfert, y compris le jeton, le montant et le destinataire, et les drapeaux facultatifs permettent de gérer certains cas particuliers, tels que le transfert à un destinataire non financé ou le financement du destinataire avec une petite quantité de SOL pour les frais de transaction.
+
+
 #### **Awesome Work!**
 
-See that we have added the flag –allow-unfunded-recipient to complete the transfer, and we are also adding the flag –fund-recipient because this is a new token and your friend won’t have an associated token account for your token account. 
+See that we have added the flag `--allow-unfunded-recipient` to **complete the transfer**, and we are also adding the flag `–-fund-recipient` because this is a new token and your friend won’t have an associated token account for your token account. 
 
 The command will first create an associated token account for the recipient and then transfer the amount from the sender’s token account to the recipient’s associated token account.
 
-Have you also noticed that we were using the term \`token account\` so far but now we have used the term \`associated token account\`? So, what does an associated token account or ATA mean? We touched upon this at the start of the tutorial, but let’s dig a little deeper…
+Have you also noticed that we were using the term `token account` so far but now we have used the term `associated token account`? So, what does an associated token account or ATA mean? We touched upon this at the start of the tutorial, but let’s dig a little deeper…
 
 #### **Associated Token Account (ATA)**
 
-So far, you’ve got to grips with this crucial concept: a user needs a token account for every token they hold. But when we are sending a token to someone, we can’t be sure that the person has a token account for that particular token or whether we’ll have to create one for them…
+So far, you’ve got to grips with this crucial concept: **a user needs a token account for every token they hold**. But when we are sending a token to someone, we can’t be sure that the person has a token account for that particular token or whether we’ll have to create one for them…
 
 To solve this issue, a standard way of deriving token accounts exists using the _Associated Token Program_. This program provides us with the standard way of deriving a token account for a user and such an account is known as an Associated Token Account or ATA.
 
@@ -193,45 +238,65 @@ ATA is in fact a **program-derived-address (PDA)** account. If you complete our:
 
 The transfer command we looked at in the last section does exactly this under the hood. First of all, it derives PDA using the given token address and recipient address. If such PDA exists on-chain then the recipient’s ATA exists so it sends the token to such ATA. If not, then it first creates an ATA for the recipient and then sends tokens to it.
 
+> Un "Associated Token Account" (ATA) sur la blockchain Solana est un **compte de portefeuille** qui est **automatiquement associé** à un **compte utilisateur** spécifique et utilisé pour stocker un type spécifique de jeton (token).
+
+> Lorsqu'un utilisateur détient des jetons sur Solana, **chaque type de jeton est associé à un compte spécifique appelé "Token Mint"**.
+
+> Lorsqu'un utilisateur souhaite recevoir ou stocker des jetons d'un certain type, **un ATA est automatiquement créé** pour ce compte utilisateur, lié à ce "Token Mint".  
+
+> Cela permet à l'utilisateur de gérer ses jetons de manière transparente sans avoir à créer manuellement des comptes pour chaque type de jeton.
+
+> **En résumé, un ATA est un compte automatiquement créé pour stocker un type spécifique de jeton sur Solana**.
+
+```mermaid
+graph LR
+    User[Compte Utilisateur] -->|Reçoit ou Stocke des Jetons| ATA["Associated Token Account (ATA)"]
+    ATA -->|Automatiquement associé| User
+    ATA -->|Lié à un Token Mint| TokenMint[Token Mint]
+    TokenMint --> Jetons
+```
+
+Ce diagramme représente le processus d'un Associated Token Account (ATA) sur la blockchain Solana. Lorsqu'un utilisateur détient des jetons, un ATA est automatiquement associé à son compte utilisateur et utilisé pour stocker les jetons. Chaque ATA est lié à un Token Mint spécifique, qui est le compte associé au type de jeton. L'ATA est automatiquement créé pour l'utilisateur lorsqu'il reçoit ou stocke des jetons, lui permettant de gérer ses jetons de manière transparente.
+
 ### **\*Take a breather\*… it’s now time for Part 2**
 
 ### **Creating an spl token using the umi library**
 
-For this section we will be working with Typescript, and UMI – _A Solana Framework for JavaScript clients._ 
+For this section we will be working with Typescript, and **UMI** – _A Solana Framework for JavaScript clients._ 
 
-Make sure that you have [typescript](https://www.typescriptlang.org/download), [ts-node](https://www.npmjs.com/package/ts-node) installed and your Solana env is set up properly.
+Make sure that you have [**typescript**](https://www.typescriptlang.org/download), [**ts-node**](https://www.npmjs.com/package/ts-node) installed and your Solana env is set up properly.
 
 Start off by creating an empty directory, initializing and setting up an empty TypeScript project.
 ```bash
-    mkdir ts-token-solana  && cd ts-token-solana && npm init -y && tsc --init && mkdir src && touch src/main.ts
+mkdir ts-token-solana  && cd ts-token-solana && npm init -y && tsc --init && mkdir src && touch src/main.ts
 ```
 
-We are now ready to get started working on our src/main.ts file. We will be using the umi library to make the process of creating our token easier. It is a library from Metaplex, the same team that created the token metadata program, that enables us to quickly build and use TS clients for Solana programs such as the token metadata program.
+We are now ready to get started working on our **`src/main.ts` file**. We will be using the umi library to make the process of creating our token easier. It is a library from Metaplex, the same team that created the token metadata program, that enables us to quickly build and use TS clients for Solana programs such as the token metadata program.
 
 Let’s go ahead and install the packages,
 
 ```bash
-    npm install \
-      @metaplex-foundation/umi \
-      @metaplex-foundation/umi-bundle-defaults \
-      @metaplex-foundation/mpl-token-metadata \
-      @solana/web3.js \ 
-      @types/node \
+npm install \
+    @metaplex-foundation/umi \
+    @metaplex-foundation/umi-bundle-defaults \
+    @metaplex-foundation/mpl-token-metadata \
+    @solana/web3.js \ 
+    @types/node \
 ```
 
-We shall be using your system wallet and thus let’s create a new touch src/helpers.ts that extracts your paper wallet keypair. 
+We shall be using your system wallet and thus let’s create a new `touch src/helpers.ts` that extracts your paper wallet keypair. 
 
 Populate it with:
 
 ```javascript
-    import { readFileSync } from 'fs';
-    import { homedir } from 'os';
-    import { Keypair } from '@solana/web3.js';
-    
-    const USER_KEYPAIR_PATH = homedir() + "/.config/solana/id.json";
-    export const userKeypair = Keypair.fromSecretKey(
-        Buffer.from(JSON.parse(readFileSync(USER_KEYPAIR_PATH, "utf-8")))
-    );
+import { readFileSync } from 'fs';
+import { homedir } from 'os';
+import { Keypair } from '@solana/web3.js';
+
+const USER_KEYPAIR_PATH = homedir() + "/.config/solana/id.json";
+export const userKeypair = Keypair.fromSecretKey(
+    Buffer.from(JSON.parse(readFileSync(USER_KEYPAIR_PATH, "utf-8")))
+);
 ```
 
 Let’s import this function into our src/main.ts and instantiate a new instance of our umi client running on the devnet cluster. 
@@ -239,88 +304,91 @@ Let’s import this function into our src/main.ts and instantiate a new instance
 We will do this using the createUmi function from the default bundle package `@metaplex-foundation/umi-bundle-defaults`.
 
 ```javascript
-    import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-    import { userKeypair } from "./helpers";
-    
-    const umi = createUmi('https://api.devnet.solana.com');
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { userKeypair } from "./helpers";
+
+const umi = createUmi('https://api.devnet.solana.com');
 ```
 
 Next, we will register our keypair to be used as the default signer when making any and all transactions, using the use method. It is a method that will allow us to inject plugins to our umi instance such as programs, signers and payers for transactions. 
 
-Let’s register our paper wallet keypair as the signer for all our transactions and register the `mplMetadataProgram` which we will be calling to create our token.You will notice that directly using the \``userKeypair`\` with the \``keypairIdentity`\` interface will result in an error. This is because umi’s public key interface is defined differently from the one that @solana/web3.js uses. The fix is quite easy as we only need to wrap our keypair around umi’s eddsa interface,
+Let’s register our paper wallet keypair as the signer for all our transactions and register the `mplMetadataProgram` which we will be calling to create our token.You will notice that directly using the ``userKeypair`` with the ``keypairIdentity`` interface will result in an error. This is because umi’s public key interface is defined differently from the one that @solana/web3.js uses. The fix is quite easy as we only need to wrap our keypair around umi’s eddsa interface,
 
 ```javascript
-    import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
-    import { keypairIdentity } from "@metaplex-foundation/umi";
-    import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-    import { userKeypair } from "./helpers";
-    
-    const umi = createUmi('https://api.devnet.solana.com');
-    
-    const keypair = umi.eddsa.createKeypairFromSecretKey(userKeypair.secretKey);
-    
-    umi.use(keypairIdentity(keypair))
-        .use(mplTokenMetadata())
+import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
+import { keypairIdentity } from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { userKeypair } from "./helpers";
+
+const umi = createUmi('https://api.devnet.solana.com');
+
+const keypair = umi.eddsa.createKeypairFromSecretKey(userKeypair.secretKey);
+
+umi.use(keypairIdentity(keypair))
+    .use(mplTokenMetadata())
 ```
 
 The minting process involves three steps:
 
-1.  Uploading our asset metadata to an off-chain or centralised storage provider. We will not carry out this process and shall be using a URI we uploaded earlier.
-2.  Creating the on-chain metadata account that will hold our asset data such as the off-chain URI, mint, symbol …
-3.  Finally, we mint our token with the associated accounts.
+1. Uploading our asset metadata to an off-chain or centralised storage provider. We will not carry out this process and shall be using a URI we uploaded earlier.
+2. Creating the on-chain metadata account that will hold our asset data such as the off-chain URI, mint, symbol …
+3. Finally, we mint our token with the associated accounts.
 
-Let’s start off with 1 and create the metadata account, for this, we shall be using the CreateV1 method.
+Let’s start off with 1 and create the metadata account, for this, we shall be using the **`CreateV1()` method**.
 ```javascript
-    const metadata = {
-        name: "Solana Gold",
-        symbol: "GOLDSOL",
-        uri: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json",
-    };
-    
-    const mint = generateSigner(umi);
-    async function createMetadataDetails() {
-        await createV1(umi, {
-            mint,
-            authority: umi.identity,
-            name: metadata.name,
-            symbol: metadata.symbol,
-            uri: metadata.uri,
-            sellerFeeBasisPoints: percentAmount(0),
-            decimals: 9,
-            tokenStandard: TokenStandard.Fungible,
-        }).sendAndConfirm(umi)
-    }
-```
+const metadata = {
+    name: "Solana Gold",
+    symbol: "GOLDSOL",
+    uri: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens/.assets/spl-token.json",
+};
 
-Using the CreateV1 method we here define the metadata and behaviour of our token such as the number of decimals… 
-
-Because CreateV1 is a generic function that can also be used to create a token that’s Non-Fungible, we use the tokenStandard field to declare our token as Fungible.
-
-It’s worth also noting that if the Mint account does not exist, it will be automatically created for us. If you pass a mint account that exists, then this function is able to determine the type of token(tokenStandard) and thus you can omit the field if you already have a mint account already initialized. To finish off our build, We will need to call the instruction to mint our tokens using the Mintv1 function.
-```javascript
-    async function mintToken() {
-        await mintV1(umi, {
-            mint: mint.publicKey,
-            authority: umi.identity,
-            amount: 10_000,
-            tokenOwner: umi.identity.publicKey,
-            tokenStandard: TokenStandard.Fungible,
-        }).sendAndConfirm(umi)
-    }
-```
-
-To make the process of creating tokens easier, umi also provides methods that abstract creating tokens into a two-step process and into one function. Using the createFungible method, we are able to easily reduce the number of functions we are writing.
-
-```javascript
-    createFungible(umi, {
+const mint = generateSigner(umi);
+async function createMetadataDetails() {
+    await createV1(umi, {
         mint,
-        authority: umi.identity,
-        name: metadata.name,
-        symbol: metadata.symbol,
-        uri: metadata.uri,
+        authority           : umi.identity,
+        name                : metadata.name,
+        symbol              : metadata.symbol,
+        uri                 : metadata.uri,
         sellerFeeBasisPoints: percentAmount(0),
-        decimals: 9,
-    }).sendAndConfirm(umi);
+        decimals            : 9,
+        tokenStandard       : TokenStandard.Fungible,
+    }).sendAndConfirm(umi)
+}
+```
+
+Using the **`CreateV1()` method** we here define the metadata and behaviour of our token such as the number of decimals… 
+
+Because `CreateV1()` is a generic function that can also be used to create a token that’s Non-Fungible, we use the **`tokenStandard` field** to declare our token as Fungible.
+
+It’s worth also noting that if the Mint account does not exist, it will be automatically created for us.
+
+If you pass a mint account that exists, then this function is able to determine the **type of token** (`tokenStandard`) and thus you can omit the field if you already have a mint account already initialized. To finish off our build, We will need to call the instruction to mint our tokens using the **`Mintv1()` function**.
+
+```javascript
+async function mintToken() {
+    await mintV1(umi, {
+        mint         : mint.publicKey,
+        authority    : umi.identity,
+        amount       : 10_000,
+        tokenOwner   : umi.identity.publicKey,
+        tokenStandard: TokenStandard.Fungible,
+    }).sendAndConfirm(umi)
+}
+```
+
+To make the process of creating tokens easier, umi also provides methods that abstract creating tokens into a two-step process and into one function. Using the **`createFungible()` method**, we are able to easily reduce the number of functions we are writing.
+
+```javascript
+createFungible(umi, {
+    mint,
+    authority           : umi.identity,
+    name                : metadata.name,
+    symbol              : metadata.symbol,
+    uri                 : metadata.uri,
+    sellerFeeBasisPoints: percentAmount(0),
+    decimals            : 9,
+}).sendAndConfirm(umi);
 ```
 
 We will use this method to make the process easier.
@@ -328,7 +396,7 @@ We will use this method to make the process easier.
 Let’s go ahead and call our TS script using ts-node.
 
 ```bash
-    ts-node main.ts
+ts-node main.ts
 ```
 And Boom, you’ve created your token with metadata on Solana!
 
@@ -347,8 +415,15 @@ Now you’ve completed the tutorial we encourage you to contribute to this tutor
 
 **Extra resources:** 
 
-If you want to see how far this rabbit hole goes, check out the Solana Program Library Docs below! Discover how to: wrap sol around your token, mint with multisig authority, sign offline with multisig authority, freeze accounts from transferring your token and much, much more!
+If you want to see how far this rabbit hole goes, check out the **Solana Program Library Docs** below!
 
-[https://spl.solana.com/token#example-wrapping-sol-in-a-token](https://spl.solana.com/token#example-wrapping-sol-in-a-token)
+Discover how to:
+- wrap sol around your token
+- mint with multisig authority
+- sign offline with multisig authority
+- freeze accounts from transferring your token
+- and much, much more!
 
-[https://spl.solana.com/token#example-mint-with-multisig-authority](https://spl.solana.com/token#example-mint-with-multisig-authority)
+[**Token Program | Wrapping SOL in a Token**](https://spl.solana.com/token#example-wrapping-sol-in-a-token)
+
+[**Token Program | Mint with Multisig Authority**](https://spl.solana.com/token#example-mint-with-multisig-authority)
