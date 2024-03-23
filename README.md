@@ -1,5 +1,5 @@
 
-# <img src="assets/solana-sol-logo.svg" width="32" height="32"> Solana Learning Track
+# <img src="assets/solana-sol-logo.svg" width="30" height="30"> Solana Learning Track
 
 ❯ [**Become A solana Developper (Calyptus)**](https://calyptus.co/learn-solana/)
 
@@ -37,12 +37,17 @@
 │   └── 06 - Creating Your First Token.md
 ├── 03 - Mint Your First Token
 │   └── 07 - Mint Your First Token.md
-├── 2024-02-10-08-52-46.png
+├── assets
+│   ├── 2024-02-10-08-52-46.png
+│   └── solana-sol-logo.svg
 ├── playground
 │   ├── 01 - Getting Started With Solana
 │   │   └── 04 - Setting Up Your Local Environment.md
-│   └── 02 - Creating You First Token
-│       ├── 06 - Creating Your First Token.md
-│       └── ts-token-solana
+│   ├── 02 - Creating You First Token
+│   │   ├── 06 - Creating Your First Token.md
+│   │   └── ts-token-solana
+│   └── 03 - Mint Your First Token
+│       ├── 07 - Mint Your First Token.md
+│       └── solana-nft-anchor
 └── README.md
 ```

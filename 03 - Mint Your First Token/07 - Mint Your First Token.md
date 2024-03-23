@@ -33,8 +33,8 @@ If you’ve decided to use the fork, make sure you have the [**Solana CLI suite*
 	At the root of the project run: `anchor build && anchor keys list`
 
 - **Update Your `Anchor.toml` and `lib.rs`** `**files**`. 
-	Update the `solana_nft_anchor = "ADD ADDRESS HERE"` field with the public key generated from the previous step. 
-	Finally, update the `declare_id` macro field in `programs/solana-nft-anchor/src/lib.rs` file with the public key from the previous step.
+	- [X] Update the `solana_nft_anchor = "ADD ADDRESS HERE"` field with the public key generated from the previous step. 
+	- [X] Finally, update the `declare_id` macro field in `programs/solana-nft-anchor/src/lib.rs` file with the public key from the previous step.
 
 - **Contribute:** We encourage you to contribute to this project! If you find errors, have suggestions for improvements, or want to expand upon the tutorial, please submit pull requests. Let’s learn together and make this resource even better. 
 
@@ -60,7 +60,15 @@ anchor-cli 0.28.0
 solana-cli 1.16.13 (src:b2a38f65; feat:3949673676, client:SolanaLabs)
 ```
 
-To check your run `running anchor --version && solana --version` 
+To check your run `anchor --version && solana --version` 
+
+```bash
+anchor --version && solana --version
+```
+```
+anchor-cli 0.29.0
+solana-cli 1.17.4 (src:2e5a20f7; feat:2295605592, client:SolanaLabs)
+```
 
 Next, we Initialize an empty anchor project.
 
@@ -96,7 +104,7 @@ declare_id!("9TEtkW972r8AVyRmQzgyMz8GpG7WJxJ2ZUVZnjFNJgWM"); //the program id ab
 pub mod solana_nft_anchor {
 	use super::*;
 
-	pub fn initialize(ctx: Context<Initialize>) -Result<(){
+	pub fn initialize(ctx: Context<Initialize>) ->Result<()> {
 		Ok(())
 	}
 }
@@ -111,30 +119,50 @@ We will rename `Initialize` it to `InitNFT` and bring into scope the accounts we
 
 The first account we will bring into scope will be the signer. This account is the authority, fee payer for the transactions we make and signer of the transaction.
 
+### The `Signer Account`
+
 ```rust
 // snip
 
 #[derive(Accounts)]
-pub struct InitNFT<'info{
+pub struct InitNFT<'info> {
 	/// CHECK: ok, we are passing in this account ourselves
 	#[account(mut, signer)]
 	signer: AccountInfo<'info>
 }
 ```
 
-But how does the Solana Virtual Machine(SVM) differentiate a signer account from a normal one? We mark it as one. There are two ways to do this, using the [**Signer**](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/signer/struct.Signer.html) account variant or by using anchor constraints which is what we are doing. **Anchor constraints**, defined using `#[account(<constraints>)]` are built-in features to simplify common security checks, e.g. mark accounts as mutable or not.
+But how does the **Solana Virtual Machine (SVM)** differentiate a signer account from a normal one? We mark it as one.
 
-In our code snipped above, we have marked the account as a mutable account(because we are going to be mutating the account balance when paying for the transactions) and as a signer using `#[account(mut, signer)]`
+There are two ways to do this:
+- Using the [**Signer**](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/signer/struct.Signer.html) account variant
+- Or by using anchor constraints which is what we are doing. **Anchor constraints**, defined using `#[account(<constraints>)]` are **built-in features to simplify common security checks**, e.g. mark accounts as mutable or not.
 
-Take note of the Rustdoc comment `/// CHECK: ok, we are passing in this account ourselves` in the code. This comment is crucial when utilizing the AccountInfo wrapper, ensuring that we aren’t just passing an unchecked account when a checked variant exists. A more in-depth discussion on this will follow in the subsequent sections.
+In our code snipped above, we have marked the account as a **mutable account** by using `mut` (because we are going to be mutating the account balance when paying for the transactions) and as a `signer` using `#[account(mut, signer)]`
+
+Take note of the **Rustdoc comment** `/// CHECK: ok, we are passing in this account ourselves` in the code.
+
+**This comment is crucial when utilizing the AccountInfo wrapper**, ensuring that we aren’t just passing an unchecked account when a checked variant exists. A more in-depth discussion on this will follow in the subsequent sections.
 
 **Interacting With the Token Program** 
 
 To create our NFT we will need to interact with the token program and the metadata program. When working in Anchor and Solana, it is required to **explicitly declare** all the accounts which you’ll interact with.
 
-This brings us to the second account which we bring into scope, the Mint account. The mint account of a token contains details about the token such as mint authority, freeze authority, total supply …etc.
+This brings us to the second account which we bring into scope, *the Mint account*.
+
+### The `Mint Account`
+
+**The mint account** of a token contains details about the token such as mint authority, freeze authority, total supply …etc.
 
 ![](https://lh3.googleusercontent.com/GDCyZYndVp3RLV8uriZtPsAeX6DgVbgwzdMu20OEoCVDyN57CWIla2eceNmIIu2PnsvuOnEb4BeDO9gIQmhPHd4lORf2aoNDpbvx5kuj3OR3VKTgZ8rXtjJly9LdALv9AQlgmz-IiKSCQgXqZQCdDCU)
+
+| Mint Account               |
+| -------------------------- |
+| Owner: Token Program       |
+| Mint Authority = Edition   |
+| Supply = 1                 |
+| Decimal = 0                |
+| Freeze Authority = Edition |
 
 ```rust
 use anchor_spl::token::Mint;
@@ -142,7 +170,7 @@ use anchor_spl::token::Mint;
 // snip
 
 #[derive(Accounts)]
-pub struct InitNFT<'info{
+pub struct InitNFT<'info> {
 	/// CHECK: ok, we are passing in this account ourselves
 	#[account(mut, signer)]
 	signer: AccountInfo<'info>,
@@ -159,27 +187,43 @@ pub struct InitNFT<'info{
 
 We have also added more constraints for our Mint account. Let’s go over them. The first constraint init is like “a wrapper” around the `system_instruction::create_account()` functions which instructs the System Program to create the account. Initializing involves three key steps:
 
-- Allocating Space: Assigning the necessary storage space for the account.
-- Transferring Lamports for Rent: Paying the necessary fees to rent the space.
-- Assigning the Account: Linking the account to the appropriate owning program. This is where the second constraint comes in, `payer = signer` which is used to pay the rent for the account creation. What is `rent`? For you to store data on Solana, you must pay a sort of deposit. This incentivizes the validators to store your data. If not paid, your data will be pruned from the blockchain. [**Read more here**](https://bpf.wtf/sol-state-history/). The next set of constraints `mint::decimals = 0` sets the decimals of our NFT token. You can’t have a 0.25 NFT!. Finally, we set the `mint::authority = signer.key(), mint::freeze_authority = signer.key()`, field to our address.
+1. **Allocating Space**: Assigning the necessary storage space for the account.
+2. **Transferring Lamports for Rent**: Paying the necessary fees to rent the space.
+3. **Assigning the Account**: Linking the account to the appropriate owning program. This is where the second constraint comes in, `payer = signer` which is used to pay the rent for the account creation. What is `rent`? For you to store data on Solana, you must pay a sort of deposit. This incentivizes the validators to store your data. If not paid, your data will be pruned from the blockchain. [**Read more here**](https://bpf.wtf/sol-state-history/).
 
-Looking at this newly added account, the declaration is different from the first account. We are now using the **Account** account type instead of **AccountInfo**.
+The next set of constraints:
+- `mint::decimals = 0` sets the decimals of our NFT token. You can’t have a 0.25 NFT!.
+- Finally, we set the `mint::authority = signer.key(), mint::freeze_authority = signer.key()`, field to our address.
 
-The anchor **AccountInfo** type is a way to define accounts that do not implement any checks on the account being passed. We are blindly trusting the account being passed as the correct account without verifying the structure of the data or the owner of the account. As such we have to also explicitly mark it as trustworthy using the rustdoc comments `/// CHECK: <comment explaining why are we blindly trusting this account>`.
+Looking at this newly added account, the declaration is different from the first account. We are now using the **`Account` account type** instead of **`AccountInfo`**.
 
-The **Account** account type is a more secure way of declaring your accounts. It contains all the methods of AccountInfo, but it verifies program ownership and deserializes underlying data into the specified type. In our above, Account checks that the owner of our mint is indeed the Token program `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` and the account contains all the required fields for a Mint account.
+#### The anchor `AccountInfo` type
 
-The fields contained that the **Mint account** contains
+It's a way to define accounts that **do not implement any checks** on the account being passed.
 
-- **mint_authority** – Address allowed to mint more tokens. For our NFT, this field is going to be set to zero. No one is allowed to mint more tokens. (useful for fungible tokens that have an unlimited supply)
+We are blindly trusting the account being passed as the correct account without verifying the structure of the data or the owner of the account.
+
+As such we have to also explicitly mark it as trustworthy using the rustdoc comments `/// CHECK: <comment explaining why are we blindly trusting this account>`.
+
+#### The `Account` account type
+
+Is a **more secure way** of declaring your accounts. It contains all the methods of AccountInfo, but it verifies program ownership and deserializes underlying data into the specified type.
+
+In our above, `Account` checks that the owner of our mint is indeed the Token program `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` and the account contains all the required fields for a Mint account.
+
+The fields contained that the **Mint account** contains:
+
+- **mint_authority** – Address allowed to mint more tokens. For our NFT, this field is going to be set to zero. No one is allowed to mint more tokens. (*useful for fungible tokens that have an unlimited supply*)
 - **supply**: The total supply of tokens. In our case when minting an NFT, the supply is going to be set to 1.
-- **decimals**: Number of decimals to consider when interpreting the balance of the token. For our NFT this is going to be zero. Why? Because NFTs are “non-fungible”, meaning unique and cannot be replaced. They cannot be divided and then made not unique. There’s no such thing as having a 0.5 NFT.
+- **decimals**: Number of decimals to consider when interpreting the balance of the token. For our NFT this is going to be zero. Why? Because NFTs are “non-fungible”, meaning unique and cannot be replaced. They cannot be divided and then made not unique. There’s **no such thing as having a 0.5 NFT**.
 - **is_initialized**: Has the token mint been initialized? True, when we call the mint instruction.
 - **freeze_authority**: Address allowed to freeze the token account.
 
-**Note:** The mint does not hold any tokens.
+> **Note:** The mint does not hold any tokens.
 
-If the mint account does not hold your tokens then where are they stored? When creating a token on Solana, you need the **Token account** to hold your newly minted tokens. The token account contains fields such as
+If the mint account does not hold your tokens then where are they stored? When creating a token on Solana, you need the **Token account** to hold your newly minted tokens.
+
+The **token account** contains fields such as:
 
 - **mint** – The mint address associated with this account.
 - **owner** – The address that has authority over this account.
@@ -192,11 +236,13 @@ If the mint account does not hold your tokens then where are they stored? When c
 
 However, there is a downside to this method.
 
-The first downside. Suppose you are an NFT hoarder, having collected 1000 NFT. When your friend wants to send you an NFT from a mint which you already own, he will need to know the correct token account to send this NFT. That means, keeping track of all those 1000 token accounts.
+1. **The first downside**. Suppose you are an NFT hoarder, having collected 1000 NFT. When your friend wants to send you an NFT from a mint which you already own, he will need to know the correct token account to send this NFT. That means, keeping track of all those 1000 token accounts.
 
-The second downside. Suppose you want to introduce your non-crypto native friend to NFTs. Your friend has never minted from the collection before. If you want to send him his first NFT from a collection he has never minted, your friend needs to have a token account from that Mint’s NFT. This makes transferring assets difficult and cumbersome. It also means that airdrop campaigns become impossible.
+2. **The second downside**. Suppose you want to introduce your non-crypto native friend to NFTs. Your friend has never minted from the collection before. If you want to send him his first NFT from a collection he has never minted, your friend needs to have a token account from that Mint’s NFT. This makes transferring assets difficult and cumbersome. It also means that airdrop campaigns become impossible.
 
 This is where the motivation to reduce the friction when working with Solana tokens came in, which led to spec a new way for the token account to map to the user’s wallet, using the [**Associated Token Account**](https://spl.solana.com/token).
+
+### The `Associated Token Account` (ATA)
 
 The **Associated Token Account** is a PDA that is deterministically derived using the address and mint account.
 
@@ -212,7 +258,7 @@ use anchor_spl::{
 // snip
 
 #[derive(Accounts)]
-pub struct InitNFT<'info{
+pub struct InitNFT<'info> {
 	/// CHECK: ok, we are passing in this account ourselves
 	#[account(mut, signer)]
 	pub signer: AccountInfo<'info>,
@@ -232,10 +278,10 @@ pub struct InitNFT<'info{
 	)]
 	pub associated_token_account: Account<'info, TokenAccount>, // new
 
-	pub token_program: Program<'info, Token>, // new
+	pub token_program:            Program<'info, Token>, // new
 	pub associated_token_program: Program<'info, AssociatedToken>, // new
-	pub system_program: Program<'info, System>, // bew
-	pub rent: Sysvar<'info, Rent// new
+	pub system_program:           Program<'info, System>, // new
+	pub rent:                     Sysvar<'info, Rent>// new
 }
 ```
 
@@ -245,22 +291,32 @@ The Mint account is defined by the Mint Account type.
 
 We have an `associated_token_account`, with multiple anchor constraints. We use the `init_if_needed` flag to initialize this token account, if it does not exist on our wallet and to use this feature you need to define a payer who will cover the cost associated with creating a new account. We also pass in the authority and mint as constraints, to link the mint to the token account.
 
-We have also added a space to serve as a visual separation between the accounts and Programs. Remember (we know we sound like a broken record, but it’s important to remember this), that everything on Solana is an account. These Programs are also accounts. The difference is that they have their executable field marked as true. Read more about the [**Solana account model**](https://solanacookbook.com/core-concepts/accounts.html#account-model).
+We have also added a space to serve as a visual separation between the accounts and Programs. Remember (we know we sound like a broken record, but it’s important to remember this), that everything on Solana is an account. These Programs are also accounts. The difference is that they have their executable field marked as true.
 
-Anchor also provides another primitive to make working with Programs easier, We use Program to mark an account as executable. This also implements similar checks to Accounts. This means you can’t pass in the address of a malicious program trying to pass it off as the Token Program. The IDs won’t match and the programs executions will be halted.
+Read more about the [**Solana account model**](https://solanacookbook.com/core-concepts/accounts.html#account-model).
+
+Anchor also provides another primitive to make working with Programs easier, We use **`#[program]`
+ to mark an account as executable**.
+> This also implements similar **checks to Accounts**.
+
+> This means you **can’t pass** in the address of a **malicious program** trying to pass it off as the Token Program. The IDs won’t match and the programs executions will be halted.
 
 Let’s talk about the four programs.
 
 1. **token_program** – the Token program
 2. **associated_token_program** – handles creation of our ATA(Associated Token Account).
 3. **system_program** – because the associated token program might end up needing to create a new ATA, we need to pass in this program which is responsible for creating all accounts.
-4. **rent** – on Solana, you need to pay for space when you are storing data on the blockchain. All accounts on Solana(now) are required to be rent-exempt, which means putting down a 2-years worth of sol to store data on the chain. (The amount of sol you will allocate will depend on the size of the account, and in our case for the ATA, it will range in the hundredths of a cent). As such, we need to interact with the rent program for this.
+4. **rent** – on Solana, you need to pay for space when you are storing data on the blockchain. All accounts on Solana (now) are required to be rent-exempt, which means putting down a **2-years worth of SOL** to store data on the chain. (**The amount of sol you will allocate will depend on the size of the account, and in our case for the ATA, it will range in the hundredths of a cent (1/100)**). As such, we need to interact with the rent program for this.
 
-With that, we are now ready to call the instructions to create our first NFT on Solana. Let us first call the instructions to create the mint and token account. To do this, we will need to interact with the Token Program. One way to do this would be to use [**invoke**](https://docs.solana.com/developing/programming-model/calling-between-programs) and make a cross-program call into it. Using invoke is tricky because it requires you to pass in the correct number of accounts and the correct accounts you are going to interact with. You miss one account and boom, your TX fails and you get a cryptic error telling you, “program failed because you missed an account” and yet it can’t tell you which account you missed 🤦. Enough of my rant.
+With that, we are now ready to call the instructions to create our first NFT on Solana. Let us first call the instructions to create the mint and token account. To do this, we will need to interact with the Token Program. One way to do this would be to use [**invoke**](https://docs.solana.com/developing/programming-model/calling-between-programs) and make a cross-program call into it. Using invoke is tricky because it requires you to pass in the correct number of accounts and the correct accounts you are going to interact with.
 
-Anchor makes this easier through a feature called CpiContext. This is a structured way to bundle all the accounts we’ll interact with when making a cross-program invocation (CPI), thus simplifying the process. It also has already defined methods for commonly called instructions.
+You miss one account and boom, your TX fails and you get a cryptic error telling you, *“program failed because you missed an account”* and yet it can’t tell you which account you missed 🤦. Enough of my rant.
 
-Let’s take a look at how we can use the CpiContext to initialise a token mint. To initialise the CpiContext, call the associative function new which takes in two arguments.
+Anchor makes this easier through a feature called `CpiContext`. This is a structured way to bundle all the accounts we’ll interact with when making a **cross-program invocation (CPI)**, thus simplifying the process. It also has already defined methods for commonly called instructions.
+
+Let’s take a look at how we can use the `CpiContext` to initialise a token mint.
+
+To initialise the `CpiContext`, call the associative function new which takes in two arguments.
 
 1. The external program we are cpi-ing into.
 2. Anchor-defined accounts we will pass in to make the call to the external program successful. As opposed to a normal `invoke` invocation to an external program, using anchor-defined Accounts means we will only declare the accounts which are vital and not all the programs which almost always never change.
@@ -268,7 +324,7 @@ Let’s take a look at how we can use the CpiContext to initialise a token mint.
 For example, let’s take a look at the code to initialize a new token mint and associated token account using it.
 
 ```rust
-pub fn init_nft(ctx: Context<InitNFT>) -Result<(){
+pub fn init_nft(ctx: Context<InitNFT>) ->Result<()> {
 	// create mint account
 	let cpi_context = CpiContext::new(
 		ctx.accounts.token_program.to_account_info(),
@@ -284,7 +340,7 @@ pub fn init_nft(ctx: Context<InitNFT>) -Result<(){
 }
 ```
 
-As highlighted above, we first create our cpi context by calling CpiContext::new() method. We are interacting with the token program and thus we pass it in first. For the second send we will pass in a struct that contains defines the accounts we will interact with.
+As highlighted above, we first create our cpi context by calling **`CpiContext::new()` method**. We are interacting with the token program and thus we pass it in first. For the second send we will pass in a struct that contains defines the accounts we will interact with.
 
 Here is all the code together.
 
@@ -302,7 +358,7 @@ pub mod solana_nft_anchor {
 
 	use super::*;
 
-	pub fn init_nft(ctx: Context<InitNFT>) -Result<(){
+	pub fn init_nft(ctx: Context<InitNFT>) ->Result<()> {
 		// create mint account
 		let cpi_context = CpiContext::new(
 			ctx.accounts.token_program.to_account_info(),
@@ -348,13 +404,15 @@ pub struct InitNFT<'info{
 
 Calling this method as it is would create our nft, but what good is a monkey non-fungible without the monkey image? 😂. In the next section we dive into using the Metaplex Token Metadata Program.
 
-## **Interacting With Metaplex Metadata Program** 
+## Interacting With Metaplex Metadata Program
 
-Metaplex offers a collection of tools, smart contracts and more, designed to make the process of creating and launching NFTs easier.
+> Metaplex est une infrastructure puissante (framework et plateforme) pour le développement d'écosystèmes NFTs sur la blockchain Solana, offrant des fonctionnalités avancées pour la création, la gestion et l'échange d'actifs numériques uniques et précieux.
+
+**Metaplex** offers a collection of tools, smart contracts and more, designed to make the process of creating and launching NFTs easier.
 
 In this guide, we shall be using their [**Token Metadata Program**](https://developers.metaplex.com/token-metadata) to add metadata to our spl-token.
 
-But before that, we need to understand how Metaplex works under the hood. Remember ATAs(Associated Token Account). They are part of a special type of account owned and controlled by a program (smart contract) known as Program Derived Accounts. Simply put, they are public keys that do not have a corresponding public key. They have various use cases such as signing transactions, storing SOL and storing data, as used seen in the ATAs. They are usually derived using the program’s public key and seeds which are chosen by the developer and passed into the [**`find_program_address()`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address) function as bytes. This sha256 hash function looks for an address that is not on the ed25519 elliptic curve (addresses on the curve are keypairs). Further details about PDAs can be [**found here**](https://solanacookbook.com/core-concepts/pdas.html).
+But before that, we need to understand how Metaplex works under the hood. Remember ATAs (Associated Token Account). They are part of a special type of account owned and controlled by a program (smart contract) known as Program Derived Accounts. Simply put, they are public keys that do not have a corresponding public key. They have various use cases such as signing transactions, storing SOL and storing data, as used seen in the ATAs. They are usually derived using the program’s public key and seeds which are chosen by the developer and passed into the [**`find_program_address()`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address) function as `bytes`. This **sha256** hash function looks for an address that is not on the **ed25519 elliptic curve** (addresses on the curve are keypairs). Further details about PDAs can be [**found here**](https://solanacookbook.com/core-concepts/pdas.html).
 
 The Metaplex Metadata Program also uses PDAs. Like the Associated Token Program, the Metadata Program uses PDAs for the **metadata account** that attaches itself to the Mint Account. The metadata account is derived using the following seeds, the string literal `metadata`, Token Metadata Program pubkey i.e. `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s` and finally the public key of the `mint` account. Anchor has a different way of deriving PDAs but here is the code snippet for doing the above using a native Solana Rust program.
 
@@ -483,7 +541,7 @@ pub struct InitNFT<'info{
 }
 ```
 
-To make sure that the right accounts are passed in, we are using the `address=""` constraint to make sure that the accounts passed in are indeed the metadata and master edition accounts respectively. As we did before, untyped accounts should be accompanied by a rustdoc comment `/// CHECK: <reason why the account is untyped>` explaining why it is untyped. 
+To make sure that the right accounts are passed in, we are using the `address=""` constraint to make sure that the accounts passed in are indeed the metadata and master edition accounts respectively. As we did before, untyped accounts should be accompanied by a **rustdoc comment** `/// CHECK: <reason why the account is untyped>` explaining why it is untyped. 
 
 You might be wondering why we did not use the typed metadata **Account<‘info, MetadataAccount>** and master edition **Account<‘info, MasterEditionAccount>** account. That is because the anchor expects those account types to be initialized beforehand.
 
@@ -822,15 +880,15 @@ umi.use(nftStorageUploader({ token: "YOUR NFT.STORAGE API KEY" }));
 const imageBuffer = readFileSync('PATH TO IMAGE FILE')
 async function uploader() {
 	const [imageUri] = await umi.uploader.upload([
-	createGenericFile(imageBuffer, 'FILE NAME.PNG'),
+		createGenericFile(imageBuffer, 'FILE NAME.PNG'),
 	]);
 
 	// Upload the JSON metadata.
 	const uri = await umi.uploader.uploadJson({
-	name       : 'NFT #1',
-	description: 'description 1',
-	image      : imageUri,
-	})
+		name       : 'NFT #1',
+		description: 'description 1',
+		image      : imageUri,
+  	})
 	console.log("uri", uri);
 }
 
@@ -956,7 +1014,7 @@ Find the full code in [**this repo**](https://github.com/Calyptus-Learn/solana-n
 
 ## **Well Done**
 
-You just learned how to mint NFTs on Solana using Anchor and Metaplex. You also learned about Cross Program Invocations in Solana and why they are essential when you want your program to interact with another program. With the knowledge gained, you are ready to take on the world of Solana NFTs.
+You just learned how to mint NFTs on Solana using **Anchor** and **Metaplex**. You also learned about **Cross Program Invocations** in Solana and why they are essential when you want your program to interact with another program. With the knowledge gained, you are ready to take on the world of Solana NFTs.
 
 We hope you enjoyed this module and are looking forward to seeing you in the next one 🙂
 
