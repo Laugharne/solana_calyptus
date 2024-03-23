@@ -5,11 +5,22 @@
 
 ![](assets/2024-02-10-08-52-46.png)
 
+
+--------
+
+## 🎓 Calyptus courses
+
+- [**01 - Getting Started With Solana**](https://github.com/Laugharne/solana_calyptus/tree/main/01%20-%20Getting%20Started%20With%20Solana)
+- [**02 - Creating Your First Token**](https://github.com/Laugharne/solana_calyptus/tree/main/02%20-%20Creating%20Your%20First%20Token)
+- [**03 - Mint Your First Token**](https://github.com/Laugharne/solana_calyptus/tree/main/03%20-%20Mint%20Your%20First%20Token)
+
+
 --------
 
 ## 🖥️ Playground (code & notes)
 
 ❯ [**solana_calyptus/playground**](https://github.com/Laugharne/solana_calyptus/tree/main/playground)
+
 
 --------
 
@@ -20,6 +31,7 @@
 | [Introduction To Rust](https://github.com/Laugharne/rust-101-for-solana#getting-started) | [rust-101-for-solana](https://github.com/Laugharne/rust-101-for-solana) | Introduction To Rust                             |
 | [Create Your First Token](https://calyptus.co/lessons/creating-your-first-token/)        | [ts-token-solana](https://github.com/Laugharne/ts-token-solana)         | Minting Token on Solana using umi                |
 | [Mint Your First NFT](https://calyptus.co/lessons/mint-your-first-nft/)                  | [solana-nft-anchor](https://github.com/Laugharne/solana-nft-anchor)     | Minting nfts on Solana using anchor and metaplex |
+
 
 --------
 
@@ -51,3 +63,7 @@
 │       └── solana-nft-anchor
 └── README.md
 ```
+
+
+--------
+
