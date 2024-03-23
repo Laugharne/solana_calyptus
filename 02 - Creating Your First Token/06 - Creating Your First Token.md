@@ -6,10 +6,14 @@
 
 ### **Project Checklist!** 
 
-- [X] Are you familiar with blockchain technology? If not, click [**here**](https://calyptus.co/lessons/blockchain-101/)  
+- [X] Are you familiar with blockchain technology? If not, click [**here**](https://calyptus.co/lessons/blockchain-101/)
+
 - [X] Are you familiar with smart contracts and how they work? If not, click [**here**](https://calyptus.co/lessons/smart-contracts-101-3/)
+
 - [X] Feel like you know why Solana is great for builders? If not, click [**here**](https://calyptus.co/lessons/intro-to-solana/) (*opens in a new tab*)
+
 - [X] First time setting up your local environment? Click [**here**](https://calyptus.co/lessons/intro-to-rust-programming/)
+
 - [X] First time programming with Rust? Click [**here**](https://calyptus.co/lessons/setting-up-your-local-environment/) (*opens in a new tab*)
 
 **Getting Started**
