@@ -1,9 +1,9 @@
 
-# Solana Learning Track
+# <img src="assets/solana-sol-logo.svg" width="32" height="32"> Solana Learning Track
 
-❯ [**Become A solana Developper**](https://calyptus.co/learn-solana/)
+❯ [**Become A solana Developper (Calyptus)**](https://calyptus.co/learn-solana/)
 
-![](2024-02-10-08-52-46.png)
+![](assets/2024-02-10-08-52-46.png)
 
 --------
 
