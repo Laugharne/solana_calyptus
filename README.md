@@ -1,24 +1,29 @@
 
 # Solana Learning Track
 
-[Becoma A solana Developper](https://calyptus.co/learn-solana/)
+❯ [**Become A solana Developper**](https://calyptus.co/learn-solana/)
 
 ![](2024-02-10-08-52-46.png)
 
-## Playground (code & notes)
+--------
 
-[**solana_calyptus/playground**](https://github.com/Laugharne/solana_calyptus/tree/main/playground)
+## 🖥️ Playground (code & notes)
 
-## References & forks
+❯ [**solana_calyptus/playground**](https://github.com/Laugharne/solana_calyptus/tree/main/playground)
 
-| Lesson                                                                                   | GitHub (fork)                                                           | Description                                      |
+--------
+
+## 📚 References & forks
+
+| Lessons                                                                                  | GitHub (fork)                                                           | Descriptions                                     |
 | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------ |
 | [Introduction To Rust](https://github.com/Laugharne/rust-101-for-solana#getting-started) | [rust-101-for-solana](https://github.com/Laugharne/rust-101-for-solana) | Introduction To Rust                             |
 | [Create Your First Token](https://calyptus.co/lessons/creating-your-first-token/)        | [ts-token-solana](https://github.com/Laugharne/ts-token-solana)         | Minting Token on Solana using umi                |
 | [Mint Your First NFT](https://calyptus.co/lessons/mint-your-first-nft/)                  | [solana-nft-anchor](https://github.com/Laugharne/solana-nft-anchor)     | Minting nfts on Solana using anchor and metaplex |
 
+--------
 
-## Repository tree
+## 🌲 Repository tree
 
 ```
 .
