@@ -191,6 +191,8 @@ We have also added more constraints for our Mint account. Let’s go over them. 
 2. **Transferring Lamports for Rent**: Paying the necessary fees to rent the space.
 3. **Assigning the Account**: Linking the account to the appropriate owning program. This is where the second constraint comes in, `payer = signer` which is used to pay the rent for the account creation. What is `rent`? For you to store data on Solana, you must pay a sort of deposit. This incentivizes the validators to store your data. If not paid, your data will be pruned from the blockchain. [**Read more here**](https://bpf.wtf/sol-state-history/).
 
+[**Solana State History**](https://web.archive.org/web/20231202023443/https://bpf.wtf/sol-state-history/)
+
 The next set of constraints:
 - `mint::decimals = 0` sets the decimals of our NFT token. You can’t have a 0.25 NFT!.
 - Finally, we set the `mint::authority = signer.key(), mint::freeze_authority = signer.key()`, field to our address.
@@ -370,12 +372,13 @@ pub mod solana_nft_anchor {
 		);
 
 		mint_to(cpi_context, 1)?;
+
 		Ok(())
 	}
 }
 
 #[derive(Accounts)]
-pub struct InitNFT<'info{
+pub struct InitNFT<'info> {
 	/// CHECK: ok, we are passing in this account ourselves
 	#[account(mut, signer)]
 	pub signer: AccountInfo<'info>,

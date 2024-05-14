@@ -314,4 +314,224 @@ ahash = "=0.8.6"
 - [Accelerated Guide to Fullstack Web3 with ASS (Anchor, Solana, and Svelte) 🍑 - DEV Community](https://dev.to/0xmuse/accelerated-guide-to-fullstack-web3-with-ass-anchor-solana-and-svelte-1mg)
 - [Solana Summer](https://www.notboring.co/p/solana-summer)
 - [2501babe: solana 101](https://2501babe.github.io/posts/solana101.html)
-- 
+
+----
+
+- [**Sealevel — Parallel Processing Thousands of Smart Contracts**](https://medium.com/solana-labs/sealevel-parallel-processing-thousands-of-smart-contracts-d814b378192)
+  - [**Proof of History (POH)**](https://medium.com/solana-labs/proof-of-history-a-clock-for-blockchain-cf47a61a9274) — a clock before consensus;
+  - [**Tower BFT**](https://medium.com/solana-labs/wer-bft-solanas-high-performance-implementation-of-pbft-464725911e79) — a PoH-optimized version of PBFT;
+  - [**Turbine**](https://medium.com/solana-labs/turbine-solanas-block-propagation-protocol-solves-the-scalability-trilemma-2ddba46a51db) — a block propagation protocol;
+  - [**Gulf Stream**](https://medium.com/solana-labs/gulf-stream-solanas-mempool-less-transaction-forwarding-protocol-d342e72186ad) — Mempool-less transaction forwarding protocol;
+  - [**Sealevel**](https://medium.com/solana-labs/sealevel-parallel-processing-thousands-of-smart-contracts-d814b378192) — Parallel smart contracts run-time;
+  - [**Pipelining**](https://solana.com/pipelining-in-solana-the-transaction-processing-unit/) — a Transaction Processing Unit for validation optimization
+  - [**Cloudbreak**](https://medium.com/solana-labs/cloudbreak-solanas-horizontally-scaled-state-architecture-9a86679dcbb1) — Horizontally-Scaled Accounts Database; and
+  - [**Archivers**](https://solana.com/archivers/) — Distributed ledger store
+
+----
+
+**Tower BFT** est un algorithme de consensus conçu pour la blockchain Solana. Il s'agit d'une version optimisée de l'**algorithme PBFT adaptée à Solana**.
+
+Tower BFT s'appuie à la fois sur PBFT pour parvenir à un consensus entre les validateurs et sur PoH pour garantir l'ordre temporel des transactions. Cela permet à Solana d'atteindre un consensus rapide et efficace, ce qui est essentiel pour les performances élevées de la blockchain.
+
+1. **Practical Byzantine Fault Tolerance (PBFT)** : PBFT est un algorithme de consensus qui permet à un réseau décentralisé de parvenir à un accord sur l'ordre des transactions malgré la présence de nœuds défaillants ou malveillants.
+
+2. **Proof of History (PoH)** : Il prend en compte les caractéristiques spécifiques de Solana. Dont la **Proof of History**, mécanisme qui garantit l'unicité de l'ordre des transactions dans Solana, permettant d'atteindre un consensus plus rapidement.
+
+```mermaid
+graph TD;
+	A[Tower BFT] --> B["Practical Byzantine Fault Tolerance (PBFT)"];
+	A --> C["Proof of History (PoH)"];
+	B --> D[Consensus among validators];
+	C --> D;
+```
+
+
+----
+
+**Turbine** est un protocole de propagation de blocs conçu pour améliorer l'efficacité et la rapidité de la diffusion des blocs. Il utilise une approche de diffusion de type "push", dans laquelle les nœuds du réseau envoient activement les blocs aux nœuds voisins dès qu'ils sont produits.
+
+Voici un bref aperçu du fonctionnement :
+
+1. **Production du bloc :** Lorsqu'un nœud valide avec succès un nouveau bloc, il l'envoie immédiatement à ses pairs connectés.
+
+2. **Propagation multi-flux :** Turbine utilise plusieurs flux de données pour envoyer simultanément le bloc à plusieurs nœuds voisins. Cela permet de maximiser la vitesse de propagation et de réduire les goulets d'étranglement potentiels.
+
+3. **Relayeurs :** Certains nœuds spécifiques, appelés "relayeurs", sont désignés pour aider à relayer activement les blocs à travers le réseau. Ils sont choisis en fonction de leur capacité à propager efficacement les blocs.
+
+4. **Gestion de la congestion :** Turbine est conçu pour s'adapter dynamiquement aux conditions du réseau, en ajustant la fréquence et la taille des flux de données en fonction de la congestion et des performances du réseau.
+
+5. **Optimisation de la latence :** En utilisant une approche de diffusion proactive et en exploitant la parallélisation des flux de données, Turbine vise à minimiser la latence de propagation des blocs dans le réseau.
+
+Voici un diagramme illustrant le processus de propagation des blocs avec Turbine :
+
+```mermaid
+graph LR
+    A((Producteur de bloc)) --> B(Relayeur)
+    A --> C(Relayeur)
+    A --> D(Relayeur)
+    B --> E((Noeud))
+    C --> F((Noeud))
+    D --> G((Noeud))
+    E --> H((Noeud))
+    F --> I((Noeud))
+    G --> J((Noeud))
+```
+
+Dans ce diagramme :
+- Le nœud A représente le producteur de bloc initial.
+- Les nœuds B, C et D sont des relayeurs qui aident à propager le bloc.
+- Les nœuds E, F, G, H, I et J sont des nœuds récepteurs qui reçoivent et valident le bloc.
+
+```mermaid
+graph LR
+  l[[LEADER]] --> v1[VALIDATOR 1]
+  l --> v2[VALIDATOR 2]
+
+  v1 --> v3[VALIDATOR 3]
+  v1 --> v4[VALIDATOR 4]
+
+  v2 --> v5[VALIDATOR 5]
+  v2 --> v6[VALIDATOR 6]
+
+```
+
+```mermaid
+graph TB
+
+  subgraph NEIGHBORHOOD-2
+  v6 -.-> v5[VALIDATOR 5]
+  v5 -.-> v6[VALIDATOR 6]
+  end
+
+  subgraph NEIGHBORHOOD-1
+  v4 -.-> v3[VALIDATOR 3]
+  v3 -.-> v4[VALIDATOR 4]
+  end
+
+  subgraph NEIGHBORHOOD-0
+  v2[VALIDATOR 2] -.-> v1[VALIDATOR 1]
+  v1 -.-> v2
+  end
+
+```
+
+--------
+
+**Gulfstream** est un protocole de transfert de transactions sans mémorisation tampon (mempool-less) conçu pour améliorer l'efficacité et la rapidité des transactions. Contrairement aux protocoles traditionnels qui stockent les transactions dans une file d'attente (mempool) avant de les valider, Gulfstream achemine directement les transactions aux validateurs pour traitement.
+
+```mermaid
+graph LR
+    A[Client] --> B[Gulfstream Node]
+    B --> C[Validator 1]
+    B --> D[Validator 2]
+    B --> E[Validator 3]
+    C --> F[Block Creation]
+    D --> F
+    E --> F
+    F --> G[Blockchain]
+```
+
+Dans ce schéma :
+- Le client envoie une transaction au nœud Gulfstream.
+- Le nœud Gulfstream relaie la transaction directement aux validateurs sans la stocker dans une mempool.
+- Les validateurs reçoivent la transaction et la valident.
+- Une fois validée, la transaction est incluse dans un bloc et ajoutée à la blockchain.
+
+En éliminant la nécessité de stocker les transactions dans une mempool, Gulfstream réduit les délais de traitement et améliore l'efficacité du réseau, ce qui peut conduire à des transactions plus rapides et à une meilleure évolutivité globale du système.
+
+--------
+
+**Sealevel** est une couche d'exécution parallèle de contrats intelligents conçue spécifiquement pour la blockchain Solana. Elle permet à plusieurs contrats intelligents de s'exécuter simultanément, améliorant ainsi l'efficacité et les performances de la blockchain.
+
+The reason why Solana is able to process transactions in parallel is that Solana transactions describe all the states a transaction will read or write while executing. This not only allows for non-overlapping transactions to execute concurrently, but also for transactions that are only reading the same state to execute concurrently as well.
+
+**Cloudbreak** est une base de données d'adresses publiques associées à des comptes, où les comptes maintiennent des soldes et des données sous forme de vecteur d'octets. Les comptes ont un champ "owner", qui est la clé publique du programme gouvernant les transitions d'état pour le compte.
+
+**Programmes :**
+- Les programmes ne sont que du code sans états (ceuc-ci se trouve dans les "data account")
+- Les programmes ne peuvent modifier que les données des comptes qu'ils possèdent et ne peuvent débiter que ces comptes.
+- Tout programme peut créditer n'importe quel compte et lire n'importe quel compte.
+
+**Programme-système (system program) :**
+- Par défaut, tous les comptes sont initialement possédés par le `system program`.
+- Le `system program` peut :
+  - Assigner la propriété des comptes
+  - Allouer des données initialisées à zéro
+  - L'assignation de propriété de compte ne peut se produire qu'une seule fois dans la durée de vie d'un compte.
+
+**Programme-chargeur (loader program)**
+Un programme défini par l'utilisateur est chargé par le programme chargeur, qui peut le "marquer" comme exécutable.
+
+Les transactions suivantes doivent être réalisées lors du chargement d'un programme :
+- La création d'une nouvelle clé publique (`public key`)
+- Le transfert de "SOL" vers cette clé
+- L'allocation de mémoire par le `system program`
+- L'assignation du compte au `loader`
+- Le téléchargement du bytecode dans la mémoire par morceaux
+- Le marquage de la mémoire comme exécutable par le programme chargeur.
+
+À ce stade, le chargeur vérifie le bytecode, et le compte auquel le bytecode est chargé peut être utilisé comme programme exécutable. De nouveaux comptes peuvent être marqués comme appartenant au programme défini par l'utilisateur.
+
+**Transactions :**
+
+
+--------
+
+**Pipelining**
+Le pipelining est une technique d'optimisation de la validation des transactions sur la blockchain Solana. Il permet de diviser le processus de validation en plusieurs étapes distinctes, appelées "stades", qui peuvent être exécutées en parallèle. Chaque stade traite une partie spécifique de la transaction, ce qui permet d'accélérer le traitement global des transactions et d'augmenter le débit du réseau.
+
+----
+
+![](2024-03-26-17-09-09.png)
+
+
+On the Solana network, the pipeline mechanism — Transaction Processing Unit — progresses through:
+- **Data Fetching** at the kernel level
+- **Signature Verification** at the GPU level
+- **Banking** at the CPU level
+- **Writing** at the kernel space.
+
+By the time the TPU starts to send blocks out to the validators, it’s already fetched in the next set of packets, verified their signatures, and begun crediting tokens.
+
+Imaginons 4 transactions successives (A, B, C, D) Elles seront décodées de la manière suivante :
+- La transaction D sera à l'étape Writing
+- La transaction C sera à l'étape Banking
+- La transaction B à l'étape Signature Verification
+- La transaction A au Fetching
+
+```mermaid
+graph TD;
+    A --> fetch;
+    B --> verif;
+    C --> banking;
+    D --> write;
+
+    subgraph "Transactional Processing Unit (TPU)"
+        fetch>Fetching]
+        verif>"Sig Verify"]
+        banking>Banking];
+        write>Writing];
+  
+        subgraph GPU
+            verif>"Sig Verify"]
+        end
+    
+        subgraph CPU
+            banking>Banking]
+        end
+    
+        subgraph KERNEL
+            fetch>Fetching]
+            write>Writing]
+        end
+  
+        subgraph "Transactions"
+            A[Transaction A]
+            B[Transaction B]
+            C[Transaction C]
+            D[Transaction D]
+        end
+    end
+```
+
+En résumé, le pipelining permet d'optimiser la validation des transactions en réduisant le temps nécessaire pour traiter chaque transaction individuelle, ce qui contribue à améliorer les performances et l'efficacité du réseau Solana.

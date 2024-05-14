@@ -35,6 +35,13 @@
 
 --------
 
+## 🔘 NFTs
+
+- [**Create Your First Token**](https://solscan.io/token/B94zKfQDF1ETFxvJoxW5gy12bPt4122MqfqifFUJWFbT)
+
+
+--------
+
 ## 🌲 Repository tree
 
 ```
